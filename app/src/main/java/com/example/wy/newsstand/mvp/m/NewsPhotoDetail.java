@@ -1,11 +1,10 @@
-package com.example.wy.newsstand.bean;
+package com.example.wy.newsstand.mvp.m;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 public class NewsPhotoDetail implements Parcelable {

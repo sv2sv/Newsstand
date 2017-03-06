@@ -21,6 +21,8 @@ import com.example.wy.newsstand.bean.NewsChannelTable;
 import com.example.wy.newsstand.com.Constants;
 import com.example.wy.newsstand.event.ChannelChangedEvent;
 
+import com.example.wy.newsstand.event.RecycleViewScrollEvent;
+import com.example.wy.newsstand.event.ScrollToTopEvent;
 import com.example.wy.newsstand.mvp.NSActivity;
 import com.example.wy.newsstand.utils.RxBus;
 
@@ -95,19 +97,33 @@ public class HomeActivity extends NSActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSubscription = RxBus.getInstance().toObservable(ChannelChangedEvent.class).subscribe(new Action1<ChannelChangedEvent>() {
+        mSubscription = RxBus.getInstance().toObservable(ChannelChangedEvent.class)
+                .subscribe(new Action1<ChannelChangedEvent>() {
             @Override
             public void call(ChannelChangedEvent channelChangedEvent) {
                 mNewsPresenter.onChannelDbChanged();
             }
         });
+        RxBus.getInstance().toObservable(RecycleViewScrollEvent.class)
+                .subscribe(new Action1<RecycleViewScrollEvent>() {
+                    @Override
+                    public void call(RecycleViewScrollEvent recycleViewScrollEvent) {
+                        if(recycleViewScrollEvent.isUp()){
+                            //todo animation
+                            mFab.setVisibility(View.GONE);
+                        }else {
+                            mFab.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
     }
 
     @OnClick({R.id.fab, R.id.add_channel_iv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab:
-               /* RxBus.getInstance().post(new ScrollToTopEvent());*/
+                Toast.makeText(this, "fab", Toast.LENGTH_LONG).show();
+                RxBus.getInstance().post(new ScrollToTopEvent());
                 break;
             case R.id.add_channel_iv:
                 Intent intent = new Intent(this, NewsChannelActivity.class);

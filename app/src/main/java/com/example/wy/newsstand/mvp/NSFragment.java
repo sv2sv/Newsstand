@@ -19,7 +19,7 @@ import rx.Subscription;
  * Created by wy on 17-3-5.
  */
 
-public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
+public abstract class NSFragment<T extends BasePresenter> extends Fragment {
 
     public FragmentComponent getFragmentComponent() {
         return mFragmentComponent;

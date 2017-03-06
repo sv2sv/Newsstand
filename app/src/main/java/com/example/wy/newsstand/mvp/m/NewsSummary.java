@@ -1,7 +1,6 @@
-package com.example.wy.newsstand.bean;
+package com.example.wy.newsstand.mvp.m;
 
 import java.util.List;
-
 
 
 public class NewsSummary {

@@ -15,7 +15,7 @@ import com.example.wy.newsstand.R;
 import com.example.wy.newsstand.WYNSDepend;
 import com.example.wy.newsstand.com.Constants;
 import com.example.wy.newsstand.event.PhotoDetailOnClickEvent;
-import com.example.wy.newsstand.mvp.BaseFragment;
+import com.example.wy.newsstand.mvp.NSFragment;
 import com.example.wy.newsstand.utils.RxBus;
 import com.example.wy.newsstand.utils.UITransform;
 
@@ -30,7 +30,7 @@ import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
-public class PhotoDetailFragment extends BaseFragment {
+public class PhotoDetailFragment extends NSFragment {
 
     @BindView(R.id.photo_view)
     PhotoView mPhotoView;

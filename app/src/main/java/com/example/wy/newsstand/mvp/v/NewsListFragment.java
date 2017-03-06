@@ -27,9 +27,10 @@ import com.example.wy.newsstand.bean.NewsPhotoDetail;
 import com.example.wy.newsstand.bean.NewsSummary;
 import com.example.wy.newsstand.com.Constants;
 import com.example.wy.newsstand.com.LoadNewsType;
+import com.example.wy.newsstand.event.RecycleViewScrollEvent;
 import com.example.wy.newsstand.event.ScrollToTopEvent;
 import com.example.wy.newsstand.helper.NetHelper;
-import com.example.wy.newsstand.mvp.BaseFragment;
+import com.example.wy.newsstand.mvp.NSFragment;
 import com.example.wy.newsstand.mvp.p.NewsListPresenterImpl;
 import com.example.wy.newsstand.utils.RxBus;
 
@@ -42,7 +43,7 @@ import butterknife.OnClick;
 import rx.functions.Action1;
 
 
-public class NewsListFragment extends BaseFragment implements NewsListView, NewsListAdapter.OnNewsListItemClickListener,
+public class NewsListFragment extends NSFragment implements NewsListView, NewsListAdapter.OnNewsListItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.news_rv)
     RecyclerView mNewsRv;
@@ -106,26 +107,9 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
         mNewsRv.setLayoutManager(new LinearLayoutManager(mActivity,
                 LinearLayoutManager.VERTICAL, false));
         mNewsRv.setItemAnimator(new DefaultItemAnimator());
-        mNewsRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-
-                int lastVisibleItemPosition = ((LinearLayoutManager) layoutManager)
-                        .findLastVisibleItemPosition();
-                int visibleItemCount = layoutManager.getChildCount();
-                int totalItemCount = layoutManager.getItemCount();
-
-                if (!mIsAllLoaded && visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastVisibleItemPosition >= totalItemCount - 1) {
-                    mNewsListPresenter.loadMore();
-                    mNewsListAdapter.showFooter();
-                    mNewsRv.scrollToPosition(mNewsListAdapter.getItemCount() - 1);
-                }
-            }
-
-        });
+        MyRvScrollListener scrollListener = new MyRvScrollListener();
+        scrollListener.setScrollThreshold(4);
+        mNewsRv.addOnScrollListener(scrollListener);
 
         mNewsListAdapter.setOnItemClickListener(this);
         mNewsRv.setAdapter(mNewsListAdapter);
@@ -325,6 +309,43 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
 
     }
 
+    public  class MyRvScrollListener extends RecyclerView.OnScrollListener{
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
 
+            int lastVisibleItemPosition = ((LinearLayoutManager) layoutManager)
+                    .findLastVisibleItemPosition();
+            int visibleItemCount = layoutManager.getChildCount();
+            int totalItemCount = layoutManager.getItemCount();
+
+            if (!mIsAllLoaded && visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE
+                    && lastVisibleItemPosition >= totalItemCount - 1) {
+                mNewsListPresenter.loadMore();
+                mNewsListAdapter.showFooter();
+                mNewsRv.scrollToPosition(mNewsListAdapter.getItemCount() - 1);
+            }
+
+
+        }
+
+        int mScrollThreshold;
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            boolean isSignificantDelta = Math.abs(dy) > mScrollThreshold;
+            if (isSignificantDelta) {
+                if (dy > 0) {
+                    RxBus.getInstance().post(new RecycleViewScrollEvent(true));
+                } else {
+                    RxBus.getInstance().post(new RecycleViewScrollEvent(false));
+                }
+            }
+        }
+    public void setScrollThreshold(int scrollThreshold) {
+        mScrollThreshold = scrollThreshold;
+    }
+}
 }
 

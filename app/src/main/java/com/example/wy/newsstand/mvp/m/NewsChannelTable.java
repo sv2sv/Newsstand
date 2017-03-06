@@ -1,4 +1,4 @@
-package com.example.wy.newsstand.bean;
+package com.example.wy.newsstand.mvp.m;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;

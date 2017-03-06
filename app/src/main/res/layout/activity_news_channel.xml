@@ -8,7 +8,7 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.cins.daily.mvp.ui.activities.NewsChannelActivity">
+    >
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
