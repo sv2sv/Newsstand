@@ -5,7 +5,7 @@ import android.util.Log;
 import com.example.wy.newsstand.WYNSDepend;
 import com.example.wy.newsstand.bean.NewsDetail;
 import com.example.wy.newsstand.com.Host;
-import com.example.wy.newsstand.helper.NetHelper;
+import com.example.wy.newsstand.utils.NetHelper;
 import com.example.wy.newsstand.mvp.v.NewsDetailView;
 import com.example.wy.newsstand.net.RequestCallback;
 import com.example.wy.newsstand.net.RetrofitManager;

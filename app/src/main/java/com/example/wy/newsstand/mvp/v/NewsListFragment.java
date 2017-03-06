@@ -29,7 +29,7 @@ import com.example.wy.newsstand.com.Constants;
 import com.example.wy.newsstand.com.LoadNewsType;
 import com.example.wy.newsstand.event.RecycleViewScrollEvent;
 import com.example.wy.newsstand.event.ScrollToTopEvent;
-import com.example.wy.newsstand.helper.NetHelper;
+import com.example.wy.newsstand.utils.NetHelper;
 import com.example.wy.newsstand.mvp.NSFragment;
 import com.example.wy.newsstand.mvp.p.NewsListPresenterImpl;
 import com.example.wy.newsstand.utils.RxBus;

@@ -33,7 +33,7 @@ import com.example.wy.newsstand.R;
 import com.example.wy.newsstand.WYNSDepend;
 import com.example.wy.newsstand.bean.NewsDetail;
 import com.example.wy.newsstand.com.Constants;
-import com.example.wy.newsstand.helper.NetHelper;
+import com.example.wy.newsstand.utils.NetHelper;
 import com.example.wy.newsstand.mvp.NSActivity;
 import com.example.wy.newsstand.mvp.p.NewsDetailPresenterImpl;
 import com.example.wy.newsstand.utils.UITransform;

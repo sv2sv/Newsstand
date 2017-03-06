@@ -8,7 +8,7 @@ import com.example.wy.newsstand.bean.NewsSummary;
 import com.example.wy.newsstand.com.Host;
 import com.example.wy.newsstand.com.LoadNewsType;
 import com.example.wy.newsstand.com.NewApi;
-import com.example.wy.newsstand.helper.NetHelper;
+import com.example.wy.newsstand.utils.NetHelper;
 import com.example.wy.newsstand.mvp.v.NewsListView;
 import com.example.wy.newsstand.net.RequestCallback;
 import com.example.wy.newsstand.net.RetrofitManager;
