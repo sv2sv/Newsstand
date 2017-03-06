@@ -8,15 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.cins.daily.App;
-import com.cins.daily.R;
-import com.cins.daily.event.ChannelItemMoveEvent;
-import com.cins.daily.listener.OnItemClickListener;
-import com.cins.daily.mvp.entity.NewsChannelTable;
-import com.cins.daily.utils.ClickUtil;
-import com.cins.daily.utils.MyUtils;
-import com.cins.daily.utils.RxBus;
-import com.cins.daily.widget.ItemDragHelperCallback;
+import com.example.wy.newsstand.R;
+import com.example.wy.newsstand.WYNSDepend;
+import com.example.wy.newsstand.bean.NewsChannelTable;
+import com.example.wy.newsstand.event.ChannelItemMoveEvent;
+import com.example.wy.newsstand.utils.RxBus;
+import com.example.wy.newsstand.utils.SharedPreferenceUtils;
+import com.example.wy.newsstand.weight.ItemDragHelperCallback;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,9 +22,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Eric on 2017/1/19.
- */
 
 public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannelTable> implements
         ItemDragHelperCallback.OnItemMoveListener {
@@ -87,7 +82,7 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannelTable
             newsChannelViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!ClickUtil.isFastDoubleClick()) {
+                    if (!WYNSDepend.isFastDoubleClick()) {
                         mOnItemClickListener.onItemClick(v, newsChannelViewHolder.getLayoutPosition());
                     }
                 }
@@ -104,13 +99,13 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannelTable
 
         if (newsChannel.getNewsChannelIndex() == 0) {
             viewHolder.mNewsChannelTv.setTextColor(ContextCompat
-                    .getColor(App.getAppContext(), getColorId()));
+                    .getColor(WYNSDepend.getAppContext(), getColorId()));
         }
     }
 
     private int getColorId() {
         int colorId;
-        if (MyUtils.isNightMode()) {
+        if (SharedPreferenceUtils.isNightMode()) {
             colorId = R.color.alpha_40_white;
         } else {
             colorId = R.color.alpha_40_black;

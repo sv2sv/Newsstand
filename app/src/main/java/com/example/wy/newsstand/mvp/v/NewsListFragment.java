@@ -16,25 +16,31 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.wy.newsstand.bean.NewsChannelTable;
+import com.example.wy.newsstand.R;
+import com.example.wy.newsstand.adapter.NewsListAdapter;
+import com.example.wy.newsstand.bean.NewsPhotoDetail;
+import com.example.wy.newsstand.bean.NewsSummary;
+import com.example.wy.newsstand.com.Constants;
+import com.example.wy.newsstand.com.LoadNewsType;
+import com.example.wy.newsstand.event.ScrollToTopEvent;
+import com.example.wy.newsstand.helper.NetHelper;
 import com.example.wy.newsstand.mvp.BaseFragment;
+import com.example.wy.newsstand.mvp.p.NewsListPresenterImpl;
+import com.example.wy.newsstand.utils.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import rx.functions.Action1;
 
-/**
- * Created by wy on 17-3-6.
- */
 
 public class NewsListFragment extends BaseFragment implements NewsListView, NewsListAdapter.OnNewsListItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
@@ -134,7 +140,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initValues();
-        NetUtil.isNetworkErrThenShowMsg();
+        NetHelper.isNetworkErrThenShowMsg();
     }
 
     private void initValues() {
@@ -202,7 +208,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
     public void showMsg(String message) {
         mProgressBar.setVisibility(View.GONE);
         // 网络不可用状态在此之前已经显示了提示信息
-        if (NetUtil.isNetworkAvailable()) {
+        if (NetHelper.isNetworkAvailable()) {
             Snackbar.make(mNewsRv, message, Snackbar.LENGTH_LONG).show();
         }
     }
@@ -318,4 +324,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
     public void onItemClick(View view, int position) {
 
     }
+
+
+}
 

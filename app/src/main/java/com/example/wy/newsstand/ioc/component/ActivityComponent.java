@@ -6,6 +6,10 @@ import android.content.Context;
 import com.example.wy.newsstand.ioc.module.ActivityModule;
 import com.example.wy.newsstand.ioc.scope.EveActivity;
 import com.example.wy.newsstand.ioc.scope.LifeCycle;
+import com.example.wy.newsstand.mvp.v.HomeActivity;
+import com.example.wy.newsstand.mvp.v.NewsChannelActivity;
+import com.example.wy.newsstand.mvp.v.NewsDetailActivity;
+import com.example.wy.newsstand.mvp.v.NewsPhotoDetailActivity;
 
 import dagger.Component;
 
@@ -22,13 +26,13 @@ public interface ActivityComponent {
 
     Activity getActivity();
 
-/*    void inject(NewsActivity newsActivity);
+    void inject(HomeActivity newsActivity);
 
     void inject(NewsDetailActivity newsDetailActivity);
 
     void inject(NewsChannelActivity newsChannelActivity);
 
-    void inject(NewsPhotoDetailActivity newsPhotoDetailActivity);*/
+    void inject(NewsPhotoDetailActivity newsPhotoDetailActivity);
 
     //void inject(PhotoActivity photoActivity);
 

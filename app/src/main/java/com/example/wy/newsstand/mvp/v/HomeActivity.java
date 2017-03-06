@@ -12,12 +12,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.wy.newsstand.R;
+import com.example.wy.newsstand.WYNSDepend;
+import com.example.wy.newsstand.adapter.NewsFragmentPagerAdapter;
 import com.example.wy.newsstand.bean.NewsChannelTable;
 import com.example.wy.newsstand.com.Constants;
 import com.example.wy.newsstand.event.ChannelChangedEvent;
-import com.example.wy.newsstand.mvp.BaseView;
+
 import com.example.wy.newsstand.mvp.NSActivity;
 import com.example.wy.newsstand.utils.RxBus;
 
@@ -32,6 +35,9 @@ import rx.functions.Action1;
 
 public class HomeActivity extends NSActivity
         implements NewsView {
+
+    private String mCurrentViewPagerName;
+    private List<String> mChannelNames;
 
 
     @BindView(R.id.toolbar)
@@ -72,7 +78,6 @@ public class HomeActivity extends NSActivity
     @Override
     protected void initViews() {
         mNavView = NavView;
-
         mPresenter = mNewsPresenter;
         mPresenter.attachView(this);
     }
@@ -84,7 +89,7 @@ public class HomeActivity extends NSActivity
 
     @Override
     public void initInjector() {
-
+        mActivityComponent.inject(this);
     }
 
     @Override
@@ -145,12 +150,44 @@ public class HomeActivity extends NSActivity
                 getSupportFragmentManager(), channelNames, mNewsFragmentList);
         mViewPager.setAdapter(adapter);
         mTabs.setupWithViewPager(mViewPager);
-        MyUtils.dynamicSetTabLayoutMode(mTabs);
+        WYNSDepend.dynamicSetTabLayoutMode(mTabs);
 //        mTabs.setTabsFromPagerAdapter(adapter);
         setPageChangeListener();
 
         mChannelNames = channelNames;
         int currentViewPagerPosition = getCurrentViewPagerPosition();
         mViewPager.setCurrentItem(currentViewPagerPosition, false);
+    }
+
+
+    private int getCurrentViewPagerPosition() {
+        int position = 0;
+        if (mCurrentViewPagerName != null) {
+            for (int i = 0; i < mChannelNames.size(); i++) {
+                if (mCurrentViewPagerName.equals(mChannelNames.get(i))) {
+                    position = i;
+                }
+            }
+        }
+        return position;
+    }
+
+    private void setPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mCurrentViewPagerName = mChannelNames.get(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }

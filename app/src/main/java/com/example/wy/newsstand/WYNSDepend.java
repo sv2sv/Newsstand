@@ -6,8 +6,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.os.SystemClock;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
+import android.view.View;
 
 import com.example.wy.newsstand.utils.SharedPreferenceUtils;
 import com.example.wy.newsstand.com.Constants;
@@ -16,8 +19,13 @@ import com.example.wy.newsstand.greendao.DaoSession;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
- * Created by wy on 17-3-5.
+ * Created by wy on 16-12-25.
  */
 
 public class WYNSDepend {
@@ -29,7 +37,7 @@ public class WYNSDepend {
         impl = new WYNSDepend();
         impl.mAppContext = context;
         impl.initActivityLifecycleCallback(context);
-        impl.initStrictMode();
+       // impl.initStrictMode();
         impl.initDayNightMode();
         impl.setupDatabase();
     }
@@ -129,6 +137,75 @@ public class WYNSDepend {
 
     public static DaoSession getDaoSession(){
         return impl.mDaoSession;
+    }
+
+    public static int getColor(int nightColor, int dayColor) {
+        int color;
+        if (!SharedPreferenceUtils.isNightMode()) {
+            color = nightColor;
+        } else {
+            color = dayColor;
+        }
+        return color;
+    }
+
+    // click time
+    private static long mLastClickTime = 0;
+    private static final int SPACE_TIME = 500;
+
+    public static boolean isFastDoubleClick() {
+        long time = SystemClock.elapsedRealtime();
+        if (time - mLastClickTime <= SPACE_TIME) {
+            return true;
+        } else {
+            mLastClickTime = time;
+            return false;
+        }
+    }
+
+    public static void dynamicSetTabLayoutMode(TabLayout tabLayout) {
+        int tabWidth = calculateTabWidth(tabLayout);
+        int screenWidth = getScreenWith();
+
+        if (tabWidth <= screenWidth) {
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        } else {
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
+    }
+
+    public static int getScreenWith() {
+        return impl.mAppContext.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    private static int calculateTabWidth(TabLayout tabLayout) {
+        int tabWidth = 0;
+        for (int i = 0; i < tabLayout.getChildCount(); i++) {
+            final View view = tabLayout.getChildAt(i);
+            view.measure(0, 0); // 通知父view测量，以便于能够保证获取到宽高
+            tabWidth += view.getMeasuredWidth();
+        }
+        return tabWidth;
+    }
+
+    /**
+     * from yyyy-MM-dd HH:mm:ss to MM-dd HH:mm
+     */
+    public static String formatDate(String before) {
+        String after;
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                    .parse(before);
+            after = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(date);
+        } catch (ParseException e) {
+            Log.e("formatDate","转换新闻日期格式异常：" + e.toString());
+            return before;
+        }
+        return after;
+    }
+
+    public static boolean isHavePhoto() {
+        return SharedPreferenceUtils.getSharedPreferences().getBoolean(Constants.SHOW_NEWS_PHOTO, true);
     }
 
 }

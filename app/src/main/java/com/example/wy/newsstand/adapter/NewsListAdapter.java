@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,7 +28,7 @@ public class NewsListAdapter extends BaseRecyclerViewAdapter<NewsSummary> {
 
     public static final int TYPE_PHOTO_ITEM = 2;
 
-    public interface OnNewsListItemClickListener extends AdapterView.OnItemClickListener {
+    public interface OnNewsListItemClickListener extends OnItemClickListener {
         void onItemClick(View view, int position, boolean isPhoto);
     }
 

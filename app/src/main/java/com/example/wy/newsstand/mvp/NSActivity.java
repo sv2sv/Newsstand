@@ -7,6 +7,7 @@ import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,18 +17,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.example.wy.newsstand.R;
+import com.example.wy.newsstand.WYNSApplication;
 import com.example.wy.newsstand.com.Constants;
 import com.example.wy.newsstand.ioc.component.ActivityComponent;
+import com.example.wy.newsstand.ioc.component.DaggerActivityComponent;
+import com.example.wy.newsstand.ioc.module.ActivityModule;
+import com.example.wy.newsstand.mvp.v.HomeActivity;
 import com.example.wy.newsstand.utils.SharedPreferenceUtils;
 
 import butterknife.ButterKnife;
 import rx.Subscription;
 
-/**
- * Created by wy on 17-3-5.
- */
+
 
 public abstract  class NSActivity<T extends BasePresenter> extends AppCompatActivity {
     protected String TAG = getClass().getSimpleName();
@@ -37,7 +41,7 @@ public abstract  class NSActivity<T extends BasePresenter> extends AppCompatActi
     protected NavigationView mNavView;
     private DrawerLayout mDrawerLayout;
     protected T mPresenter;
-    protected boolean mIsHasNavigationView;
+    protected boolean mIsHasNavigationView = false;
     private Class mClass;
     protected Subscription mSubscription;
 
@@ -46,32 +50,47 @@ public abstract  class NSActivity<T extends BasePresenter> extends AppCompatActi
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mActivity=this;
+        Toast.makeText(this,"oncreate",Toast.LENGTH_LONG).show();
+        initActivityComponent();
         int layoutId = getLayoutId();
         setContentView(layoutId);
         ButterKnife.bind(this);
         initInjector();
         initToolBar();
         initViews();
-        if(mIsHasNavigationView){
-            initDrawerLayout();
+        if(this instanceof HomeActivity){
+            mIsHasNavigationView = true;
         }
+        if(mIsHasNavigationView){
+        initDrawerLayout();
+           }
         if (mPresenter != null) {
             mPresenter.onCreate();
         }
+        initNightModeSwitch();
+    }
+
+
+
+    private void initActivityComponent() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .applicationComponent(((WYNSApplication)getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
+                .build();
     }
 
 
     private void initNightModeSwitch() {
-        /*if (this instanceof NewsActivity) {
+        if (this instanceof HomeActivity) {
             MenuItem menuNightMode = mNavView.getMenu().findItem(R.id.nav_night_mode);
             SwitchCompat dayNightSwitch = (SwitchCompat) MenuItemCompat
                     .getActionView(menuNightMode);
             setCheckedState(dayNightSwitch);
             setCheckedEvent(dayNightSwitch);
-        }*/
+        }
     }
 
     private void setCheckedEvent(SwitchCompat dayNightSwitch) {
@@ -171,6 +190,10 @@ public abstract  class NSActivity<T extends BasePresenter> extends AppCompatActi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (mPresenter != null) {
+            mPresenter.onDestroy();
+        }
         if (mSubscription != null && !mSubscription.isUnsubscribed()) {
             mSubscription.unsubscribe();
         }

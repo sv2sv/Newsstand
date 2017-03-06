@@ -9,13 +9,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.cins.daily.listener.OnItemClickListener;
-
 import java.util.List;
 
-/**
- * Created by Eric on 2017/1/20.
- */
 
 public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int TYPE_ITEM = 0;

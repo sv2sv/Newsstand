@@ -5,7 +5,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import com.example.wy.newsstand.R;
 import com.example.wy.newsstand.WYNSDepend;
+
+import retrofit2.adapter.rxjava.HttpException;
 
 /**
  * Created by wy on 17-3-5.
@@ -39,5 +42,16 @@ public class NetHelper {
             return true;
         }
         return false;
+    }
+
+    public static String analyzeNetworkError(Throwable e) {
+        String errMsg = WYNSDepend.getAppContext().getString(R.string.load_error);
+        if (e instanceof HttpException) {
+            int state = ((HttpException) e).code();
+            if (state == 403) {
+                errMsg = WYNSDepend.getAppContext().getString(R.string.retry_after);
+            }
+        }
+        return errMsg;
     }
 }

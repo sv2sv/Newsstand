@@ -1,6 +1,7 @@
 package com.example.wy.newsstand;
 
 import android.app.Application;
+import android.widget.Toast;
 
 
 import com.example.wy.newsstand.ioc.component.ApplicationComponent;
@@ -18,9 +19,8 @@ public class WYNSApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        WYNSDepend.setup(this);
         mApplicationComponent = DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
-
+        WYNSDepend.setup(this);
     }
 
     public ApplicationComponent getApplicationComponent() {

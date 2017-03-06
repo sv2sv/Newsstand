@@ -6,6 +6,7 @@ import android.content.Context;
 import com.example.wy.newsstand.ioc.module.FragmentModule;
 import com.example.wy.newsstand.ioc.scope.EveFragment;
 import com.example.wy.newsstand.ioc.scope.LifeCycle;
+import com.example.wy.newsstand.mvp.v.NewsListFragment;
 
 import dagger.Component;
 
@@ -19,6 +20,6 @@ public interface FragmentComponent {
     Context getActivityContext();
 
     Activity getActivity();
-/*
-    void inject(NewsListFragment newsListFragment);*/
+
+    void inject(NewsListFragment newsListFragment);
 }

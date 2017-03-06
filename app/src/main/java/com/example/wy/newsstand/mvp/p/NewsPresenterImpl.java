@@ -1,22 +1,16 @@
-package com.example.wy.newsstand.mvp.v;
+package com.example.wy.newsstand.mvp.p;
 
-import android.util.Log;
+
 
 import com.example.wy.newsstand.R;
 import com.example.wy.newsstand.WYNSDepend;
 import com.example.wy.newsstand.bean.NewsChannelTable;
-import com.example.wy.newsstand.com.Constants;
 import com.example.wy.newsstand.db.NewsChannelMgr;
-import com.example.wy.newsstand.mvp.p.BasePresenterImpl;
-import com.example.wy.newsstand.mvp.p.NewsPresenter;
+import com.example.wy.newsstand.mvp.v.NewsView;
 import com.example.wy.newsstand.net.RequestCallback;
 import com.example.wy.newsstand.utils.UITransform;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -25,23 +19,23 @@ import rx.Subscriber;
 import rx.Subscription;
 
 /**
- * Created by wy on 17-3-5.
+ * Created by wy on 2017/1/16.
  */
+public class NewsPresenterImpl extends BasePresenterImpl<NewsView, List<NewsChannelTable>>
+        implements NewsPresenter {
 
-class HomePresenterImpl extends BasePresenterImpl<NewsView, List<NewsChannelTable>>implements NewsPresenter{
-    private ExecutorService mSingleThreadPool;
 
-    @Inject
-    public HomePresenterImpl(){
 
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mSubscription= loadNewsChannels(this);
+        loadNewsChannels();
     }
 
+    private void loadNewsChannels() {
+        mSubscription = lodeNewsChannels(this);
+    }
 
     @Override
     public void success(List<NewsChannelTable> data) {
@@ -51,11 +45,11 @@ class HomePresenterImpl extends BasePresenterImpl<NewsView, List<NewsChannelTabl
 
     @Override
     public void onChannelDbChanged() {
-
-        mSubscription = loadNewsChannels(this);
+        loadNewsChannels();
     }
 
-    public Subscription loadNewsChannels(final RequestCallback<List<NewsChannelTable>> callback) {
+
+    public Subscription lodeNewsChannels(final RequestCallback<List<NewsChannelTable>> callBack) {
         return Observable.create(new Observable.OnSubscribe<List<NewsChannelTable>>() {
             @Override
             public void call(Subscriber<? super List<NewsChannelTable>> subscriber) {
@@ -73,19 +67,13 @@ class HomePresenterImpl extends BasePresenterImpl<NewsView, List<NewsChannelTabl
 
                     @Override
                     public void onError(Throwable e) {
-                        callback.onError(WYNSDepend.getAppContext().getString(R.string.db_error));
+                        callBack.onError(WYNSDepend.getAppContext().getString(R.string.db_error));
                     }
 
                     @Override
                     public void onNext(List<NewsChannelTable> newsChannelTables) {
-                        callback.success(newsChannelTables);
+                        callBack.success(newsChannelTables);
                     }
                 });
     }
-
-
-
-
-
-
 }
